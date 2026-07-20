@@ -16,11 +16,12 @@ function DatasetsDetails() {
     });
     const [loading] = useState(false);
     const [error] = useState("");
-    function handleArchive() {
+    function handleToggleStatus() {
         setDataset((previousDataset) => {
             return {
                 ...previousDataset,
-                status: "Archived",
+                status: previousDataset.status === "Active" 
+                ? "Archived" : "Active",
             };
         });
     }
@@ -32,7 +33,11 @@ function DatasetsDetails() {
             <p>ID: {dataset.id}</p>
             <p>Name: {dataset.name}</p>
             <p>Status: {dataset.status}</p>
-            <button onClick={handleArchive}>Archive</button>
+            <button onClick={handleToggleStatus}>
+                {dataset.status ==="Active"
+                ?"Archive Dataset":
+                "Activate Dataset"}
+            </button>
         </div>
     );
 }
