@@ -1,138 +1,89 @@
 import { useState } from "react";
 
-interface Dataset {
-  id: number;
-  name: string;
-}
-
-export default function DatasetsPage() {
-  const [datasets, setDatasets] = useState<Dataset[]>([
-    { id: 1, name: "Sales Data" },
-    { id: 2, name: "Customer Data" },
-    { id: 3, name: "Product Data" },
+export default function Datasets() {
+  const [datasets, setDatasets] = useState([
+    { id: 1, name: "Customer Data" },
+    { id: 2, name: "Sales Report" },
+    { id: 3, name: "Inventory" },
   ]);
 
-  const [inputValue, setInputValue] = useState("");
+  const [datasetName, setDatasetName] = useState("");
 
-  function handleClick() {
-    alert("Button Clicked!");
+  function handleAddDataset(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!datasetName.trim()) return;
+
+    setDatasets([
+      ...datasets,
+      {
+        id: Date.now(),
+        name: datasetName,
+      },
+    ]);
+
+    setDatasetName("");
   }
 
   function handleDelete(id: number) {
-    setDatasets((prev) => prev.filter((dataset) => dataset.id !== id));
+    setDatasets(datasets.filter((dataset) => dataset.id !== id));
   }
 
-  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setInputValue(event.target.value);
+  function handleCardClick(name: string) {
+    alert(`Opening ${name}`);
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    if (!inputValue.trim()) return;
-
-    const newDataset: Dataset = {
-      id: Date.now(),
-      name: inputValue,
-    };
-
-    setDatasets((prev) => [...prev, newDataset]);
-    setInputValue("");
-  }
-
-  function handleOuterClick() {
-    alert("Outer Div Clicked");
-  }
-
-  function handleInnerClick(event: React.MouseEvent<HTMLButtonElement>) {
+  function handleButtonClick(
+    event: React.MouseEvent<HTMLButtonElement>,
+    id: number
+  ) {
     event.stopPropagation();
-    alert("Inner Button Clicked");
-  }
-
-  function handleFocus() {
-    console.log("Input Focused");
-  }
-
-  function handleBlur() {
-    console.log("Input Lost Focus");
-  }
-
-  function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    console.log("Key Down:", event.key);
-  }
-
-  function handleKeyUp(event: React.KeyboardEvent<HTMLInputElement>) {
-    console.log("Key Up:", event.key);
+    handleDelete(id);
   }
 
   return (
     <div style={{ padding: "20px" }}>
       <h1>Datasets</h1>
 
-      <button onClick={handleClick}>
-        Click Me
-      </button>
-
-      <button
-        onDoubleClick={() => alert("Double Clicked")}
-      >
-        Double Click
-      </button>
-
-      <hr />
-
       <input
         type="text"
-        value={inputValue}
-        onChange={handleInputChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        onKeyDown={handleKeyDown}
-        onKeyUp={handleKeyUp}
-        placeholder="Dataset name"
+        placeholder="Dataset Name"
+        value={datasetName}
+        onChange={(event) => setDatasetName(event.target.value)}
       />
 
-      <p>Current Input: {inputValue}</p>
-
-      <form onSubmit={handleSubmit}>
-        <button type="submit">
-          Add Dataset
-        </button>
+      <form onSubmit={handleAddDataset}>
+        <button type="submit">Add Dataset</button>
       </form>
 
       <hr />
 
-      <ul>
-        {datasets.map((dataset) => (
-          <li key={dataset.id}>
-            {dataset.name}
-
-            <button
-              onClick={() => handleDelete(dataset.id)}
-            >
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      <hr />
-
-      <div
-        onClick={handleOuterClick}
-        style={{
-          border: "2px solid black",
-          padding: "30px",
-        }}
-      >
-        Outer Div
-
-        <button
-          onClick={handleInnerClick}
+      {datasets.map((dataset) => (
+        <div
+          key={dataset.id}
+          onClick={() => handleCardClick(dataset.name)}
+          style={{
+            border: "1px solid gray",
+            padding: "15px",
+            marginBottom: "10px",
+            cursor: "pointer",
+          }}
         >
-          Inner Button
-        </button>
-      </div>
+          <h3>{dataset.name}</h3>
+
+          <button
+            onClick={(event) => handleButtonClick(event, dataset.id)}
+          >
+            Delete
+          </button>
+
+          <button
+            onDoubleClick={() => alert("Double Clicked")}
+          >
+            Double Click
+          </button>
+        </div>
+      ))}
     </div>
   );
 }
