@@ -6,11 +6,17 @@ interface DatasetCardProps {
   dataset: Dataset;
   selected: boolean;
   onSelect: (id: number) => void;
+  onArchive: (id: number) => void;
+  onRestore: (id: number) => void;
+  onDelete: (id: number) => void;
 }
   function DatasetCard({
   dataset,
   selected,
   onSelect,
+  onArchive,
+  onRestore,
+  onDelete,
 }: DatasetCardProps) {
   return (
     <div className={`dataset-card ${selected ? "selected" : ""}`}
@@ -24,6 +30,14 @@ interface DatasetCardProps {
       cursor: "pointer",
       }}
     >
+      <div className="actions">
+        {dataset.status === "Active" ? (
+          <Button onClick={(event) => { event.stopPropagation(); onArchive(dataset.id); }}>Archive</Button>
+        ) : (
+          <Button onClick={(event) => { event.stopPropagation(); onRestore(dataset.id); }}>Restore</Button>
+        )}
+        <Button onClick={(event) => { event.stopPropagation(); onDelete(dataset.id); }}>Delete</Button>
+      </div>
 
       <div className="card-header">
         <h3>{dataset.name}</h3>
@@ -33,15 +47,7 @@ interface DatasetCardProps {
 
       <p>{dataset.description}</p>
 
-      <small>
-        Updated {dataset.updatedAt}
-      </small>
-
-      <div className="actions">
-        <Button>Archive</Button>
-        <Button>Delete</Button>
-      </div>
-
+      <small>Updated {dataset.updatedAt}</small>
     </div>
   );
 }
