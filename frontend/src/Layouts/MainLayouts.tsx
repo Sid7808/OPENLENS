@@ -1,23 +1,28 @@
-// Outlet is a special React Router component.It tells React:
-// "Render the current child page here."
-import{Outlet} from "react-router-dom"; 
-// We're importing reusable components that we created earlier.
+import { Outlet } from "react-router-dom";
+import { Box } from "@mui/material";
 import Navbar from "../components/Navbar/Navbar";
 import Sidebar from "../components/Sidebar/Sidebar";
 
-// Creates a React component.
+const drawerWidth = 240;
+
 function MainLayout() {
-    return (
-        <>
-        {/* Represents the top navigation. */}
-        <Navbar />
-        {/* Represents Sidebar. */}
-        <Sidebar />
-        <main>
-            {/* React replaces ONLY this component. */}
-            <Outlet />
-        </main>
-        </>
-    );
+  return (
+    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+      <Navbar drawerWidth={drawerWidth} />
+      <Sidebar drawerWidth={drawerWidth} />
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 4,
+          width: `calc(100% - ${drawerWidth}px)`,
+          marginTop: '64px',
+        }}
+      >
+        <Outlet />
+      </Box>
+    </Box>
+  );
 }
+
 export default MainLayout;
