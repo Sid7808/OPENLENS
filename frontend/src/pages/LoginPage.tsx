@@ -1,4 +1,3 @@
-import React from "react";
 import LoginForm from "../components/auth/LoginForm";
 import LoginBrandPanel from "../components/auth/LoginBrandPanel";
 import "./LoginPage.css";

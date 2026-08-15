@@ -3,5 +3,8 @@ export interface Dataset {
     name: string;
     description: string;
     status: "Active"| "Archived";
-    updatedAt: string;
+    updatedAt: string; // ISO String or relative data representation
+    updatedBy: string;
+    size: string;
+    
 }

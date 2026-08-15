@@ -3,6 +3,7 @@ interface ButtonProps {
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
     type?: "button" | "submit" | "reset";
     className?: string;
+    style?: React.CSSProperties;
 }
 
 export default function Button({
@@ -10,9 +11,10 @@ export default function Button({
     onClick,
     type = "button",
     className = "btn",
+    style,
 }: ButtonProps) {
     return (
-        <button type={type} className={className} onClick={onClick}>
+        <button type={type} className={className} onClick={onClick} style={style}>
             {children}
         </button>
     );
