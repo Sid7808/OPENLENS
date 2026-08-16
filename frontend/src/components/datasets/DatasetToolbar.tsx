@@ -1,5 +1,3 @@
-import { Search } from "@mui/icons-material";
-import Button from "../UI/Button";
 import SearchInput from "../UI/SearchInput";
 import "./DatasetToolbar.scss";
 
@@ -10,7 +8,7 @@ interface DatasetToolbarProps {
     searchQuery: string;
     onSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     statusFilter: StatusFilter;
-    onStatusFilterChange: (filter: StatusFilter) => void;
+    onStatusFilterChange:(filter: StatusFilter) => void;
     sortBy: sortOption;
     onSortByChange: (sort: sortOption) => void;
     onAddDataset: () => void;
@@ -31,6 +29,19 @@ export default function DatasetToolbar({
         <div className="dataset-toolbar">
             <h2 className="dataset-title"> Datasets</h2>
             <SearchInput value={searchQuery} onChange={onSearchChange} />
+            <div className="filter-group">
+                <select
+                    value={statusFilter}
+                    onChange={(e) => onStatusFilterChange(e.target.value as StatusFilter)}
+                    className="filter-select"
+                >
+                    {filters.map((filter) => (
+                        <option key={filter} value={filter}>
+                            {filter}
+                        </option>
+                    ))}
+                </select>
+            </div>
             <div className="sort-group">
                 <select
                     id="sort-select"
@@ -47,20 +58,21 @@ export default function DatasetToolbar({
                     <option value="size-asc">Size (Smallest)</option>
                 </select>
             </div>
-            <select
-                className="btn btn-primary add-dataset-btn"
-                defaultValue=""
-                onChange={(e) => {
-                    if (e.target.value === "new") onAddDataset();
-                    if (e.target.value === "upload existing")
-                        e.target.value = ""; //reset dropdown back to placeholder after click
-                }}
-            >
-                <option value="" disabled hidden >Add Dataset</option>
-                <option value="new">Create new dataset</option>
-                <option value="upload existing">Upload existing dataset</option>
+          <select 
+          className="btn btn-primary add-dataset-btn"
+          defaultValue=""
+          onChange={(e)=>{
+            if(e.target.value === "new") onAddDataset();
+            if(e.target.value === "upload existing")
+                e.target.value = ""; //reset dropdown back to placeholder after click
+        }}
+        >
+            <option value="" disabled hidden >Add Dataset</option>
+            <option value="new">Create new dataset</option>
+            <option value="upload existing">Upload existing dataset</option>
             </select>
-        </div>
-    );
-}
+            </div>
+            );
+        }
 
+        

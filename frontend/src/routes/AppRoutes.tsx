@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom";
 import MainLayout from "../Layouts/MainLayouts";
-// Layouts
 import DatasetLayout from "../Layouts/DatasetLayout";
 import LoginPage from "../pages/LoginPage";
 import DatasetPage from "../pages/DatasetPage";
