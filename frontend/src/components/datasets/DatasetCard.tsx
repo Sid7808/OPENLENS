@@ -6,9 +6,11 @@ import "./DatasetCard.scss";
 
 interface DatasetCardProps {
   dataset: Dataset;
-  onArchive: (id: number) => void;
-  onRestore: (id: number) => void;
-  onDelete: (id: number) => void;
+  selected?: boolean;
+  onSelect?: (id: number) => void;
+  onArchive?: (id: number) => void;
+  onRestore?: (id: number) => void;
+  onDelete?: (id: number) => void;
 }
 
 export default function DatasetCard({
@@ -37,7 +39,7 @@ export default function DatasetCard({
   };
 
   return (
-    <div
+    <div 
       className="dataset-card"
       onClick={() => navigate(`/datasets/${dataset.id}`)}
     >
@@ -56,11 +58,11 @@ export default function DatasetCard({
         </div>
         <div className="card-actions">
           {dataset.status === "Active" ? (
-            <Button className="action-btn" onClick={(event) => { event.stopPropagation(); onArchive(dataset.id); }}>Archive</Button>
+            <Button className="action-btn" onClick={(event) => { event.stopPropagation(); onArchive?.(dataset.id); }}>Archive</Button>
           ) : (
-            <Button className="action-btn" onClick={(event) => { event.stopPropagation(); onRestore(dataset.id); }}>Restore</Button>
+            <Button className="action-btn" onClick={(event) => { event.stopPropagation(); onRestore?.(dataset.id); }}>Restore</Button>
           )}
-          <Button className="action-btn" onClick={(event) => { event.stopPropagation(); onDelete(dataset.id); }}>Delete</Button>
+          <Button className="action-btn" onClick={(event) => { event.stopPropagation(); onDelete?.(dataset.id); }}>Delete</Button>
         </div>
       </div>
     </div>
