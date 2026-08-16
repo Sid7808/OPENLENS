@@ -10,7 +10,7 @@ interface DatasetToolbarProps {
     searchQuery: string;
     onSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     statusFilter: StatusFilter;
-    onStatusFilterChange:(filter: StatusFilter) => void;
+    onStatusFilterChange: (filter: StatusFilter) => void;
     sortBy: sortOption;
     onSortByChange: (sort: sortOption) => void;
     onAddDataset: () => void;
@@ -47,21 +47,20 @@ export default function DatasetToolbar({
                     <option value="size-asc">Size (Smallest)</option>
                 </select>
             </div>
-          <select 
-          className="btn btn-primary add-dataset-btn"
-          defaultValue=""
-          onChange={(e)=>{
-            if(e.target.value === "new") onAddDataset();
-            if(e.target.value === "upload existing")
-                e.target.value = ""; //reset dropdown back to placeholder after click
-        }}
-        >
-            <option value="" disabled hidden >Add Dataset</option>
-            <option value="new">Create new dataset</option>
-            <option value="upload existing">Upload existing dataset</option>
+            <select
+                className="btn btn-primary add-dataset-btn"
+                defaultValue=""
+                onChange={(e) => {
+                    if (e.target.value === "new") onAddDataset();
+                    if (e.target.value === "upload existing")
+                        e.target.value = ""; //reset dropdown back to placeholder after click
+                }}
+            >
+                <option value="" disabled hidden >Add Dataset</option>
+                <option value="new">Create new dataset</option>
+                <option value="upload existing">Upload existing dataset</option>
             </select>
-            </div>
-            );
-        }
+        </div>
+    );
+}
 
-        

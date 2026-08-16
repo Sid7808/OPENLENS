@@ -37,7 +37,7 @@ export default function DatasetCard({
   };
 
   return (
-    <div 
+    <div
       className="dataset-card"
       onClick={() => navigate(`/datasets/${dataset.id}`)}
     >

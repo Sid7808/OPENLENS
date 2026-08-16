@@ -13,11 +13,68 @@ The workspace is organized into a clean, modular structure. Below is the current
 *   **`infra/`** (Pending): Reserved for infrastructure-as-code configuration, containerization (Docker, Kubernetes), and CI/CD pipelines.
 *   **`docs/`** (Pending): Reserved for system architecture documentation, API reference guides, and design assets.
 
+```
+OpenLens (Root)
+├── backend/            # Pending backend APIs
+├── docs/               # System documentation & reference
+├── infra/              # Containerization and infra-as-code configuration
+└── frontend/           # Active React Single Page Application (SPA)
+    ├── public/
+    └── src/
+        ├── assets/     # Brand logos and SVG assets
+        ├── components/ # Modular UI components (auth, datasets, sidebar, navbar, UI)
+        ├── data/       # Mock data sources (mockDatasets.ts)
+        ├── Layouts/    # Shell layouts (MainLayouts.tsx)
+        ├── pages/      # Route entry pages (LoginPage, DatasetPage, Dashboard, etc.)
+        ├── routes/     # App routing definitions (AppRoutes.tsx)
+        ├── theme.ts    # Centralized MUI custom styling theme
+        └── types/      # TypeScript interfaces and type declarations
+```
+
 ---
 
-## 💻 Frontend Feature Implementation
+## 📜 Development Timeline & Milestones
 
-The frontend app (`/frontend`) is built with **React 19**, **TypeScript 6**, **Vite 8**, **Material UI (MUI) 9**, and **SASS (SCSS)**. We have successfully implemented the following features:
+This log chronicles the evolution of OpenLens Studio from inception to the current layout:
+
+### Phase 1: Initial Setup & Workspace Structure
+*   Created root directory and structural folders: `frontend/`, `backend/`, `infra/`, and `docs/`.
+*   Bootstrapped frontend SPA using **Vite**, **React**, and **TypeScript**.
+*   Configured configuration setups including ESLint and typescript compilation options.
+
+### Phase 2: Core React Events & Custom Components
+*   Set up state-driven dataset list rendering.
+*   Created core reusable custom UI components: [`Button.tsx`](file:///c:/Users/ansuj/OpenLens/frontend/src/components/UI/Button.tsx), [`Badge.tsx`](file:///c:/Users/ansuj/OpenLens/frontend/src/components/UI/Badge.tsx), and [`SearchInput.tsx`](file:///c:/Users/ansuj/OpenLens/frontend/src/components/UI/SearchInput.tsx).
+*   Configured simulated interactions for dataset state manipulation (Archive, Delete, Add Dataset) using React `useState` hooks.
+
+### Phase 3: Login Panel & Brand Identity
+*   Integrated brand assets including `openlens-logo.svg` and `openlens-mark.svg`.
+*   Designed a dual-panel split screen for `LoginPage.tsx` containing:
+    *   **LoginForm**: Left-hand controlled component supporting validations, toggling password visibility, and simulated navigation.
+    *   **LoginBrandPanel**: Right-hand marketing banner showcasing abstract statistics (designed with CSS charts) and key product features (Unify data, AI insights, Scale).
+
+### Phase 4: App Shell, Collapsible Navigation & Themes
+*   Engineered `MainLayout` layout container combining fixed navbar, collapsible sidebar, and scrollable content viewport.
+*   Developed a state-driven collapsible `Sidebar` component supporting:
+    *   Icon-only mini mode transitions.
+    *   MUI Tooltips on icon hover when collapsed.
+    *   Dynamic path checking using `useLocation` to apply custom active/selected styles.
+*   Centralized styling with Material-UI's `ThemeProvider` under a unified configuration (`theme.ts`) supporting font family integrations (Inter, Roboto) and default theme palettes.
+*   Wired up routes for placeholder shells: `Dashboard`, `Agents`, `Analysis`, and `Settings`.
+
+### Phase 5: Modern UI Redesign & Operations Polish
+*   Refactored dataset cards and listing layouts using dedicated SCSS modules for clean component styling separation.
+*   Enhanced `DatasetToolbar` actions:
+    *   Created status tab filters (All, Active, Archived).
+    *   Added sorting select options (Name A-Z, Name Z-A, Size, Last Updated).
+*   Implemented file size unit converter algorithm (`parseSizeToBytes`) to handle multi-unit numerical sorting (KB, MB, GB, TB).
+*   Wrapped secondary dataset operations with `event.stopPropagation()` to enable clean page navigation via card clicks without triggering action events.
+
+---
+
+## 💻 Frontend Feature Implementation Details
+
+The frontend app (`/frontend`) is built with **React 19**, **TypeScript 6**, **Vite 8**, **Material UI (MUI) 9**, and **SASS (SCSS)**.
 
 ### 1. User Authentication (Login)
 *   **Login Flow (`LoginPage`, `LoginForm`, `LoginBrandPanel`)**: A dual-panel interface with a customizable brand statement on the right and an interactive form on the left.
