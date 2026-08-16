@@ -1,4 +1,3 @@
-import React from "react";
 import Mark from "../../assets/brand/openlens-mark.svg";
 
 export default function LoginBrandPanel() {

@@ -1,12 +1,15 @@
 import { Route, Routes } from "react-router-dom";
 import MainLayout from "../Layouts/MainLayouts";
-import Dashboard from "../pages/Dashboard";
-import Analysis from "../pages/Analysis";
-import DatasetsDetails from "../pages/DatasetsDetails";
-import DatasetPage from "../pages/DatasetPage";
+// Layouts
+import DatasetLayout from "../Layouts/DatasetLayout";
 import LoginPage from "../pages/LoginPage";
-import Agents from "../pages/Agents";
+import DatasetPage from "../pages/DatasetPage";
 import Settings from "../pages/Settings";
+import Analysis from "../pages/Analysis";
+import Agents from "../pages/Agents";
+import DatasetTables from "../pages/DatasetTables";
+import DatasetAnalysis from "../pages/DatasetAnalysis";
+import DatasetAgents from "../pages/DatasetAgents";
 
 function AppRoutes() {
   return (
@@ -14,9 +17,14 @@ function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
       
       <Route path="/" element={<MainLayout />}>
-        <Route index element={<Dashboard />} />
+      <Route index element={<DatasetPage />} />
         <Route path="datasets" element={<DatasetPage />} />
-        <Route path="datasets/:datasetId" element={<DatasetsDetails />} />
+        <Route path="datasets/:datasetId" element={<DatasetLayout />}>
+          <Route index element={<DatasetTables />} />
+          <Route path="tables" element={<DatasetTables />} />
+          <Route path="analysis" element={<DatasetAnalysis />} />
+          <Route path="agents" element={<DatasetAgents />} />
+        </Route>
         <Route path="analysis" element={<Analysis />} />
         <Route path="agents" element={<Agents />} />
         <Route path="settings" element={<Settings />} />
