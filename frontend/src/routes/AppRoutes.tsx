@@ -19,6 +19,7 @@ function AppRoutes() {
       <Route index element={<DatasetPage />} />
         <Route path="datasets" element={<DatasetPage />} />
         <Route path="datasets/:datasetId" element={<DatasetLayout />}>
+        
           <Route index element={<DatasetTables />} />
           <Route path="tables" element={<DatasetTables />} />
           <Route path="analysis" element={<DatasetAnalysis />} />
