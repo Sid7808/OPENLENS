@@ -22,6 +22,7 @@ function AppRoutes() {
         
           <Route index element={<DatasetTables />} />
           <Route path="tables" element={<DatasetTables />} />
+          <Route path = "tables/:tableId" element={<DatasetTables />}/>
           <Route path="analysis" element={<DatasetAnalysis />} />
           <Route path="agents" element={<DatasetAgents />} />
         </Route>
