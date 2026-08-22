@@ -1,7 +1,7 @@
 // file:///c:/Users/ansuj/OpenLens/frontend/src/components/Sidebar/Sidebar.tsx
 
 import { useState } from "react";
-import { Drawer, List, ListItem, Tooltip, Divider, IconButton } from "@mui/material";
+import { Drawer, ListItem, Tooltip, Divider, IconButton } from "@mui/material";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import {
   TableChart,
@@ -31,13 +31,13 @@ function Sidebar({ drawerWidth = 240 }: { drawerWidth?: number }) {
   const datasetId = match ? match[1] : null;
   const tableId = match ? match[2] : null;
 
-  const isTableLevel = !!(datasetId && tableId);
-  const isDatasetLevel = !!(datasetId && !tableId);
+  const isTableLevel = false;
+  const isDatasetLevel = !!datasetId;
   const isGlobalLevel = !datasetId;
 
   const dataset = datasets.find((d) => d.id === Number(datasetId));
   const datasetName = dataset ? dataset.name : `Dataset ${datasetId}`;
-  
+
   const table = dataset?.tables?.find((t) => t.id === tableId);
   const tableName = table ? table.name : tableId;
 
@@ -143,8 +143,8 @@ function Sidebar({ drawerWidth = 240 }: { drawerWidth?: number }) {
         </div>
         <div className="menu-list">
           {datasetMenuItems.map((item) => {
-            const isSelected = 
-              location.pathname === item.path || 
+            const isSelected =
+              location.pathname.startsWith(item.path) ||
               (item.text === "Tables" && location.pathname === `/datasets/${datasetId}`);
             return renderListItemButton(item.text, item.icon, isSelected, () => navigate(item.path));
           })}

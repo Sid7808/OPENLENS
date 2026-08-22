@@ -70,6 +70,12 @@ This log chronicles the evolution of OpenLens Studio from inception to the curre
 *   Implemented file size unit converter algorithm (`parseSizeToBytes`) to handle multi-unit numerical sorting (KB, MB, GB, TB).
 *   Wrapped secondary dataset operations with `event.stopPropagation()` to enable clean page navigation via card clicks without triggering action events.
 
+### Phase 6: Secondary Sidebar Layout for Tables & Navigation Polish
+*   Engineered a sliding secondary side panel (`.tables-secondary-panel`) in `MainLayouts` that slides out from behind the left sidebar when inside a dataset context.
+*   Updated `Sidebar` navigation logic to dynamically match location paths and preserve the selected dataset context.
+*   Polished component dimensions, margins, and transition offsets across stylesheets to allow fluid, responsive layout adjustments when side panels slide open.
+*   Cleaned up unused components and redundant styles in tables sub-pages.
+
 ---
 
 ## 💻 Frontend Feature Implementation Details
@@ -102,6 +108,7 @@ The frontend app (`/frontend`) is built with **React 19**, **TypeScript 6**, **V
 ### 3. Layout, Theming & Navigation
 *   **Shell Architecture (`MainLayout`)**: Layout structure combining a fixed top navbar (`Navbar`), a permanent collapsable left drawer (`Sidebar`), and a main content viewport wrapper.
 *   **Responsive Sidebar**: Smoothly collapses to a mini-icon drawer using React state, maintaining readable Tooltips on hover for icon actions.
+*   **Tables Secondary Side Panel**: Positioned directly adjacent to the main sidebar, providing context-aware table listings, upload prompts, and actions dynamically when navigating dataset contents. Incorporates slide transitions and responsive main content viewport resizing.
 *   **Theme Integration (`theme.ts`)**: Tailored styling using Material UI's `ThemeProvider` and CSS custom properties (variables), supporting system dark and light modes (`prefers-color-scheme`).
 
 ### 4. Page Shells
