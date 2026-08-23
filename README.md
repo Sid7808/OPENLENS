@@ -1,35 +1,40 @@
 # OpenLens Studio
 
-OpenLens Studio is a modern AI-powered web platform designed for dataset management, analytical tools, and intelligent agent workflows. This workspace serves as the root repository for the project, organizing the frontend, backend, infrastructure, and documentation layers.
+OpenLens Studio is a modern AI-powered web platform designed for dataset management, analytical tools, and intelligent agent workflows. This workspace serves as a repository for the project, organized as a microservice-based architecture within a single Git repository (monorepo).
 
 ---
 
-## 📁 Repository Structure & Implementation Status
+## 📁 Repository Structure & Services
 
-The workspace is organized into a clean, modular structure. Below is the current implementation status of each directory:
-
-*   **`frontend/`** (Implemented & Active): A fully interactive, state-driven React single-page application (SPA) featuring user authentication, dataset workspaces, dynamic sorting/filtering, and responsive layout shells.
-*   **`backend/`** (Pending): Reserved for backend API services (e.g., Node.js, Python, or Go endpoints) to connect the front-end interface with databases and backend analysis engines.
-*   **`infra/`** (Pending): Reserved for infrastructure-as-code configuration, containerization (Docker, Kubernetes), and CI/CD pipelines.
-*   **`docs/`** (Pending): Reserved for system architecture documentation, API reference guides, and design assets.
+The repository is organized into independent services under the `services/` directory:
 
 ```
 OpenLens (Root)
-├── backend/            # Pending backend APIs
-├── docs/               # System documentation & reference
-├── infra/              # Containerization and infra-as-code configuration
-└── frontend/           # Active React Single Page Application (SPA)
-    ├── public/
-    └── src/
-        ├── assets/     # Brand logos and SVG assets
-        ├── components/ # Modular UI components (auth, datasets, sidebar, navbar, UI)
-        ├── data/       # Mock data sources (mockDatasets.ts)
-        ├── Layouts/    # Shell layouts (MainLayouts.tsx)
-        ├── pages/      # Route entry pages (LoginPage, DatasetPage, Dashboard, etc.)
-        ├── routes/     # App routing definitions (AppRoutes.tsx)
-        ├── theme.ts    # Centralized MUI custom styling theme
-        └── types/      # TypeScript interfaces and type declarations
+├── services/
+│   ├── web/            # OpenLens Frontend (React + Vite + TypeScript)
+│   ├── orchestrator/   # Session & Lifecycle Coordinator (Node.js + TS + Express + WS)
+│   ├── core/           # Main API Boundary / Gateway (Node.js + TS + Express)
+│   └── studio/         # Analytical & DuckDB Engine (Python + FastAPI)
+└── README.md
 ```
+
+### Services & Responsibilities
+
+1. **`web`** (Port: `5173`)
+   * **Technology**: React, Vite, TypeScript, SASS, Material UI (MUI).
+   * **Responsibility**: Responsible ONLY for the OpenLens frontend UI. It contains UI components, layouts, pages, and client state. No backend logic is placed here.
+   
+2. **`orchestrator`** (Port: `8001`)
+   * **Technology**: Node.js, TypeScript, Express, WebSockets (`ws`).
+   * **Responsibility**: Handles user sessions, WebSocket/session coordination, workspace/session lifecycle, and analysis container orchestration.
+
+3. **`core`** (Port: `8000`)
+   * **Technology**: Node.js, TypeScript, Express.
+   * **Responsibility**: Acts as the main API boundary and gateway. Handles gateway tasks (authentication, routing, authorization) and shields the frontend from internal services.
+
+4. **`studio`** (Port: `8002`)
+   * **Technology**: Python, FastAPI, DuckDB, Pandas.
+   * **Responsibility**: OpenLens analysis backend. Performs dataset/table imports, DuckDB query execution, and intelligent data analysis.
 
 ---
 
@@ -181,29 +186,61 @@ The frontend application utilizes modern packages to ensure performance and typi
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started & Local Development
+
+Every microservice in OpenLens can be run and developed independently.
 
 ### Prerequisites
-Make sure you have [Node.js](https://nodejs.org/) (v18+) installed.
+Ensure you have the following installed:
+- [Node.js](https://nodejs.org/) (v18+)
+- [Python](https://www.python.org/) (v3.10+)
 
-### Installing Dependencies
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-2. Install the node modules:
-   ```bash
-   npm install
-   ```
+### Service Ports
 
-### Running Locally
-To launch the Vite development server with Hot Module Replacement (HMR):
+| Service | Port | Protocol | Entrypoint Command |
+| :--- | :--- | :--- | :--- |
+| **web** | `5173` | HTTP | `npm run dev` |
+| **core** | `8000` | HTTP | `npm run dev` |
+| **orchestrator** | `8001` | HTTP / WS | `npm run dev` |
+| **studio** | `8002` | HTTP | `python main.py` |
+
+### Running the Services
+
+#### 1. Web Service (Frontend)
 ```bash
+cd services/web
+npm install
 npm run dev
 ```
 
-### Production Build
-To run static type-checking and bundle the application for production deployment:
+#### 2. Orchestrator Service
 ```bash
-npm run build
+cd services/orchestrator
+npm install
+# Set up .env based on .env.example
+npm run dev
+```
+
+#### 3. Core Service
+```bash
+cd services/core
+npm install
+# Set up .env based on .env.example
+npm run dev
+```
+
+#### 4. Studio Service
+```bash
+cd services/studio
+# Set up .env based on .env.example
+
+# Create and activate virtual environment
+python -m venv .venv
+# Windows:
+.venv\Scripts\activate
+# Linux/macOS:
+source .venv/bin/activate
+
+pip install -r requirements.txt
+python main.py
 ```
