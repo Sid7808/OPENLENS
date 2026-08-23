@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Production / Builds
+dist/
+build/
+out/
+.next/
+
+# Environment configurations (local settings)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Python environment and caches
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# IDE / Editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*~
+
+# Operating System files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
