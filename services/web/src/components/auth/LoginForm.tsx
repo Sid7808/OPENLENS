@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/brand/openlens-logo.svg";
+import { useAuth } from "./AuthContext";
 
 export default function LoginForm() {
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     // React Concept: String State for Controlled Inputs
     const [email, setEmail] = useState("");
@@ -14,9 +16,10 @@ export default function LoginForm() {
 
     // Basic validation state
     const [error, setError] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // React concept: Handling Form Submission
-    const handleLogin = (e: React.ChangeEvent<HTMLFormElement>) => {
+    const handleLogin = async (e: React.ChangeEvent<HTMLFormElement>) => {
         // Prevent the default browser form submission (page reload)
         e.preventDefault();
 
@@ -28,9 +31,16 @@ export default function LoginForm() {
 
         // Clear error
         setError("");
+        setIsSubmitting(true);
 
-        // Simulate successful login and navigate to the main application
-        navigate("/datasets");
+        try {
+            await login(email, password);
+            navigate("/datasets");
+        } catch (err: any) {
+            setError(err.message || "Invalid email or password.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -53,6 +63,7 @@ export default function LoginForm() {
                         placeholder="you@company.com"
                         value={email} // Controlled Input
                         onChange={(e) => setEmail(e.target.value)}
+                        disabled={isSubmitting}
                     />
                 </div>
                 
@@ -66,12 +77,14 @@ export default function LoginForm() {
                             placeholder="Enter your password"
                             value={password} // Controlled Input
                             onChange={(e) => setPassword(e.target.value)}
+                            disabled={isSubmitting}
                         />
                         <button
                             type="button"
                             className="password-toggle"
                             aria-label={showPassword ? "Hide password" : "Show password"}
                             onClick={() => setShowPassword(!showPassword)}
+                            disabled={isSubmitting}
                         >
                             {showPassword ? "Hide" : "Show"}
                         </button>
@@ -79,8 +92,8 @@ export default function LoginForm() {
                     <a href="#" className="forgot-password">Forgot password?</a>
                 </div>
                 
-                <button type="submit" className="login-button">
-                    Sign in
+                <button type="submit" className="login-button" disabled={isSubmitting}>
+                    {isSubmitting ? "Signing in..." : "Sign in"}
                 </button>
             </form>
 
@@ -88,7 +101,7 @@ export default function LoginForm() {
                 <span>OR</span>
             </div>
 
-            <button type="button" className="google-button">
+            <button type="button" className="google-button" disabled={isSubmitting}>
                 <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
