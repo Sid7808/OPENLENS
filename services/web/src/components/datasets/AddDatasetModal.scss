@@ -1,0 +1,263 @@
+// Custom variables matching your existing style guidelines
+$primary-blue: #1976d2;
+$text-dark: #1f2937;
+$text-gray: #4b5563;
+$text-light: #9ca3af;
+$border-light: #e5e7eb;
+$border-focus: #2563eb;
+$divider-color: #f3f4f6;
+
+.add-dataset-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4); // Darkened transparent background
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  animation: modalFadeIn 0.2s ease-out forwards;
+}
+
+.add-dataset-modal-container {
+  background-color: #ffffff;
+  width: 440px;
+  border-radius: 16px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, sans-serif;
+  animation: modalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    background-color: #ffffff;
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: $text-dark;
+      margin: 0;
+    }
+
+    .close-btn {
+      color: $text-light;
+      background-color: #f3f4f6;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: #e5e7eb;
+        color: $text-dark;
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 0 24px 24px 24px;
+    display: flex;
+    flex-direction: column;
+
+    &.step-preparing {
+      align-items: center;
+      text-align: center;
+      padding-top: 12px;
+      padding-bottom: 32px;
+    }
+
+    &.step-form {
+      gap: 18px;
+    }
+
+    .spinner-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 24px;
+      margin-top: 8px;
+    }
+
+    // Rotatable dark thin arc loading spinner matching Screenshot 1
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid transparent;
+      border-top-color: $text-dark;
+      border-radius: 50%;
+      animation: spinSpinner 0.85s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+    }
+
+    .prep-message {
+      font-size: 14px;
+      line-height: 1.5;
+      color: $text-gray;
+      margin: 0;
+      max-width: 300px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      label {
+        font-size: 13px;
+        font-weight: 500;
+        color: $text-gray;
+        display: flex;
+        align-items: center;
+
+        .required-label {
+          color: $text-light;
+          font-size: 11px;
+          margin-left: 4px;
+          font-weight: 400;
+        }
+      }
+
+      .input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        border: 1.5px solid $border-light;
+        border-radius: 8px;
+        padding: 10px 14px;
+        background-color: #ffffff;
+        transition: all 0.2s ease-in-out;
+
+        &:focus-within {
+          border-color: $border-focus;
+          box-shadow: 0 0 0 1px $border-focus;
+        }
+
+        input {
+          flex: 1;
+          border: none;
+          outline: none;
+          font-size: 14px;
+          color: $text-dark;
+          background: transparent;
+          padding: 0;
+          padding-right: 54px; // Prevents overlapping text with the character counter
+
+          &::placeholder {
+            color: $text-light;
+          }
+        }
+      }
+
+      .textarea-wrapper {
+        position: relative;
+        border: 1.5px solid $border-light;
+        border-radius: 8px;
+        padding: 12px 14px 28px 14px; // Bottom padding accommodates absolute char count placement
+        background-color: #ffffff;
+        transition: all 0.2s ease-in-out;
+
+        &:focus-within {
+          border-color: $border-focus;
+          box-shadow: 0 0 0 1px $border-focus;
+        }
+
+        textarea {
+          width: 100%;
+          border: none;
+          outline: none;
+          font-size: 14px;
+          line-height: 1.5;
+          color: $text-dark;
+          background: transparent;
+          resize: none;
+          padding: 0;
+
+          &::placeholder {
+            color: $text-light;
+          }
+        }
+      }
+
+      // Places count cleanly inside bottom-right corner of text containers (Screenshot 2)
+      .char-counter {
+        position: absolute;
+        bottom: 8px;
+        right: 14px;
+        font-size: 11px;
+        color: $text-light;
+        user-select: none;
+      }
+
+      // Vertically centers counter inside inputs
+      .input-wrapper .char-counter {
+        bottom: auto;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+  }
+
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid $divider-color;
+    display: flex;
+    justify-content: flex-end;
+    background-color: #ffffff;
+
+    .add-btn {
+      height: 36px;
+      padding: 0 24px;
+      border-radius: 18px; // Pill shape (Screenshot 2)
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      // Active state look
+      background-color: $text-dark;
+      color: #ffffff;
+      border: 1.5px solid $text-dark;
+
+      &:hover:not(.disabled) {
+        background-color: #374151;
+        border-color: #374151;
+      }
+
+      // Disabled state look (Screenshot 2)
+      &.disabled {
+        background-color: #ffffff;
+        color: $text-light;
+        border: 1.5px solid $border-light;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+// Micro-animations for high-fidelity feels
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spinSpinner {
+  to { transform: rotate(360deg); }
+}

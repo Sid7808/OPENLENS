@@ -5,6 +5,8 @@ import DatasetToolbar, { type StatusFilter, type sortOption } from "../component
 import DatasetCard from "../components/datasets/DatasetCard";
 import { datasets as initialDatasets } from "../data/mockDatasets";
 import "./DatasetPage.scss";
+import AddDatasetModal from "../components/datasets/AddDatasetModal";
+
 
 // Helper function to parse human-readable file sizes into bytes for numerical sorting
 function parseSizeToBytes(sizeStr: string): number {
@@ -26,19 +28,25 @@ export default function DatasetPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
   const [sortBy, setSortBy] = useState<sortOption>("updated-desc");
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   function handleAddDataset() {
-    const newDataset: Dataset = {
-      id: Date.now(),
-      name: `Dataset ${datasets.length + 1}`,
-      description: 'New dataset description',
-      status: 'Active',
-      updatedAt: new Date().toISOString(),
-      updatedBy: 'Current User',
-      size: '1.2 MB',
-    };
-    setDatasets([...datasets, newDataset]);
+    setIsAddModalOpen(true);
   }
+
+  function handleSaveDataset(name: string, description: string) {
+  const newDataset: Dataset = {
+    id: Date.now(),
+    name: name,
+    description: description || "No description provided.",
+    status: "Active",
+    updatedAt: new Date().toISOString(),
+    updatedBy: "Current User",
+    size: "0.00 KB", // Initial size for new datasets
+  };
+  setDatasets([...datasets, newDataset]);
+  setIsAddModalOpen(false);
+}
 
   function handleArchiveDataset(id: number) {
     setDatasets((prevDatasets) =>
@@ -115,6 +123,11 @@ export default function DatasetPage() {
         sortBy={sortBy}
         onSortByChange={handleSortByChange}
         onAddDataset={handleAddDataset}
+      />
+      <AddDatasetModal
+      isOpen={isAddModalOpen}
+      onClose={()=>setIsAddModalOpen(false)}
+      onAdd={handleSaveDataset}
       />
       <div className="dataset-grid">
         {sortedDatasets.map((dataset) => (
