@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export interface User {
   id: string;
@@ -21,20 +22,71 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
 
   const API_URL = import.meta.env.VITE_CORE_API_URL || "http://localhost:8080";
 
   useEffect(() => {
-    // Check localStorage for existing token and user
-    const savedToken = localStorage.getItem("openlens_token");
-    const savedUser = localStorage.getItem("openlens_user");
+    let isMounted = true;
 
-    if (savedToken && savedUser) {
-      setToken(savedToken);
-      setUser(JSON.parse(savedUser));
-    }
-    setIsLoading(false);
-  }, []);
+    const validateToken = async () => {
+      const savedToken = localStorage.getItem("openlens_token");
+
+      if (!savedToken) {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/auth/me`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${savedToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const userData: User = await response.json();
+          if (isMounted) {
+            setToken(savedToken);
+            setUser(userData);
+            localStorage.setItem("openlens_user", JSON.stringify(userData));
+          }
+        } else {
+          // Token is invalid or expired (e.g., 401)
+          localStorage.removeItem("openlens_token");
+          localStorage.removeItem("openlens_user");
+          if (isMounted) {
+            setToken(null);
+            setUser(null);
+            navigate("/login");
+          }
+        }
+      } catch (error) {
+        console.error("Token validation failed:", error);
+        localStorage.removeItem("openlens_token");
+        localStorage.removeItem("openlens_user");
+        if (isMounted) {
+          setToken(null);
+          setUser(null);
+          navigate("/login");
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    validateToken();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [API_URL, navigate]);
+  
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
@@ -76,6 +128,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem("openlens_user");
     setToken(null);
     setUser(null);
+    navigate("/login");
   };
 
   return (
