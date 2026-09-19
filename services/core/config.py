@@ -5,12 +5,12 @@ class Settings(BaseSettings):
     port: int = 8080
     environment: str = "development"
 
-# Dynamodb settings
-
+    # DynamoDB settings
     dynamodb_endpoint: str = "http://localhost:8000"
     aws_region: str = "local"
     aws_access_key_id: str = "dummy"
     aws_secret_access_key: str = "dummy"
+    dynamodb_users_table: str = "OpenLensUsers"
 
 
     class Config:
