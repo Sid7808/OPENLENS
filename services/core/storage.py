@@ -62,7 +62,7 @@ def create_users_table(dynamodb_resource=None):
                     BillingMode="PAY_PER_REQUEST",
                 )
                 table.wait_until_exists()
-                print(f"[✓] Table '{table_name}' created successfully!")
+                print(f"[OK] Table '{table_name}' created successfully!")
                 return table
             except ClientError as ce:
                 if ce.response["Error"]["Code"] == "ResourceInUseException":

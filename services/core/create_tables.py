@@ -10,7 +10,7 @@ def main():
     print(f"Connecting to DynamoDB at {settings.dynamodb_endpoint} (region: {settings.aws_region})...")
     try:
         init_db()
-        print(f"\n[✓] DynamoDB initialization completed for table '{settings.dynamodb_users_table}'.")
+        print(f"\n[OK] DynamoDB initialization completed for table '{settings.dynamodb_users_table}'.")
     except Exception as e:
         print(f"\n[!] Error initializing DynamoDB tables: {e}")
         raise
