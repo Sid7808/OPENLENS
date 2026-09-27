@@ -1,33 +1,23 @@
-
+# OpenLens Services Docker Compose
+# PostgreSQL service prepared for upcoming architecture plan execution
 services:
-  dynamodb-local:
-    image: amazon/dynamodb-local
-    container_name: dynamodb-local
-    user: root
-    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
-    ports:
-      - "8000:8000"
-    volumes:
-      - dynamodb-data:/home/dynamodblocal/data
-
-    working_dir: /home/dynamodblocal
-  
-  dynamodb-admin:
-    image: aaronshaf/dynamodb-admin:latest
-    container_name: dynamodb-admin
-    ports:
-      - "8001:8001"
-
+  postgres:
+    image: postgres:16-alpine
+    container_name: openlens-postgres
+    restart: unless-stopped
     environment:
-      - DYNAMO_ENDPOINT=http://dynamodb-local:8000
-      - AWS_REGION=local
-      - AWS_ACCESS_KEY_ID=dummy
-      - AWS_SECRET_ACCESS_KEY=dummy
-
-    depends_on:
-      - dynamodb-local
+      POSTGRES_USER: ${POSTGRES_USER:-openlens}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-openlens_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-openlens_core}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openlens -d openlens_core"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
-  dynamodb-data:
-
-
+  postgres-data:

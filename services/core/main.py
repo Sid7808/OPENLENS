@@ -2,12 +2,15 @@ from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI
 from config import settings
-from storage import init_db
+from storage import init_db, close_db
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
     yield
+    close_db()
+
 
 app = FastAPI(
     title="OpenLens Core Service",
@@ -16,12 +19,14 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+
 @app.get("/health")
 def health_check():
     return {
         "status": "healthy",
         "service": "core",
     }
+
 
 if __name__ == "__main__":
     uvicorn.run(
@@ -30,4 +35,3 @@ if __name__ == "__main__":
         port=settings.port,
         reload=True if settings.environment == "development" else False,
     )
-
