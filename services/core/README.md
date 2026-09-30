@@ -1,6 +1,6 @@
 # OpenLens Core Service
 
-The **Core Service** is the main API gateway, database coordinator, and authentication service for OpenLens. It manages user accounts, token issuance, and serves as the single source of truth for DynamoDB interactions.
+The **Core Service** is the main API gateway, database coordinator, and authentication service for OpenLens. It manages user accounts, token issuance, authentication, and PostgreSQL database connections.
 
 ---
 
@@ -8,10 +8,10 @@ The **Core Service** is the main API gateway, database coordinator, and authenti
 
 ```
 services/core/
-├── config.py                  # Pydantic BaseSettings (environment variables)
-├── storage.py                 # DynamoDB connection & table initialization
-├── create_tables.py           # CLI table initialization wrapper
-├── main.py                    # FastAPI application entry point
+├── config.py                  # Pydantic BaseSettings (PostgreSQL, JWT, server)
+├── storage.py                 # PostgreSQL connection pool & health checks (SQLAlchemy async)
+├── create_tables.py           # CLI database initialization utility
+├── main.py                    # FastAPI application with /health and /health/db
 ├── security/                  # Cryptographic utilities (Argon2id & PyJWT)
 │   ├── password.py            # Argon2id hashing & verification
 │   ├── jwt.py                 # Access token creation & decoding
@@ -20,8 +20,9 @@ services/core/
 │   ├── user_repository.py     # UserRepository implementation
 │   ├── exceptions.py          # Repository domain exceptions
 │   └── README.md              # Detailed UserRepository documentation
-├── verify_security.py         # Test suite for Security Foundation (Step 1)
-└── verify_user_repository.py  # Test suite for UserRepository (Step 2)
+├── verify_security.py         # Test suite for Security Foundation
+├── verify_db_connection.py    # Test suite for PostgreSQL connection & FastAPI health checks
+└── verify_user_repository.py  # Test suite for UserRepository
 ```
 
 ---
@@ -29,31 +30,29 @@ services/core/
 ## 🚀 Getting Started
 
 ### 1. Prerequisites & Virtual Environment
-Ensure dependencies are installed and DynamoDB Local is running:
-```powershell
-# Start DynamoDB Local via Docker Compose (from repo root)
-docker compose up -d
 
+Ensure dependencies are installed and PostgreSQL is running:
+```powershell
 # Activate virtual environment (from services/core)
 .venv\Scripts\Activate.ps1
+
+# Install requirements
+pip install -r requirements.txt
 ```
 
-### 2. Initialize DynamoDB Tables
-Run the idempotent table initialization script:
+### 2. Verify PostgreSQL Database Connection & Health Checks
 ```powershell
-python create_tables.py
+python verify_db_connection.py
 ```
-This creates the `OpenLensUsers` table with:
-* Partition Key: `userId` (String)
-* Global Secondary Index: `email-index` on `email` (String) with `ALL` projection.
+Expected output:
+* `[PASS] Database configuration verified.`
+* `[PASS] Direct database connection check verified.`
+* `[PASS] /health endpoint verified (status: healthy, db: connected).`
+* `[PASS] /health/db endpoint verified.`
 
-### 3. Run Automated Tests
+### 3. Run Security Tests
 ```powershell
-# Verify Security Layer (Argon2id + JWT)
 python verify_security.py
-
-# Verify User Repository (CRUD + GSI + DynamoDB persistence)
-python verify_user_repository.py
 ```
 
 ### 4. Start the Service
@@ -61,10 +60,11 @@ python verify_user_repository.py
 python main.py
 ```
 The FastAPI application starts on `http://localhost:8080`.
-* Health check: `http://localhost:8080/health`
-* Interactive docs: `http://localhost:8080/docs`
+* General Health & DB Check: `http://localhost:8080/health`
+* Dedicated Database Health: `http://localhost:8080/health/db`
+* Interactive API docs: `http://localhost:8080/docs`
 
 ---
 
-## 📖 Component Documentation
-* For details on `UserRepository` API methods, schemas, and query patterns, see [repository/README.md](repository/README.md).
+## 📖 Architecture & Transition Plan
+* For the complete schema design and roadmap, see the [PostgreSQL Architecture Plan](file:///C:/Users/ansuj/.gemini/antigravity-ide/brain/5008a993-f7c6-4058-afc6-1f9fcf02ea61/postgresql_architecture_plan.md).

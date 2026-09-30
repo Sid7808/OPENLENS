@@ -1,18 +1,19 @@
 """
-CLI utility script to initialize DynamoDB tables for OpenLens.
+CLI utility script to initialize/verify PostgreSQL database connection for OpenLens.
 Reuses the single source of truth defined in storage.py.
 """
+import asyncio
 from config import settings
 from storage import init_db
 
 
 def main():
-    print(f"Connecting to DynamoDB at {settings.dynamodb_endpoint} (region: {settings.aws_region})...")
+    print(f"Connecting to PostgreSQL at {settings.postgres_host}:{settings.postgres_port}/{settings.postgres_db}...")
     try:
-        init_db()
-        print(f"\n[OK] DynamoDB initialization completed for table '{settings.dynamodb_users_table}'.")
+        asyncio.run(init_db())
+        print(f"\n[OK] PostgreSQL connection verified for database '{settings.postgres_db}'.")
     except Exception as e:
-        print(f"\n[!] Error initializing DynamoDB tables: {e}")
+        print(f"\n[!] Error connecting to PostgreSQL: {e}")
         raise
 
 
